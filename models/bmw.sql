@@ -12,7 +12,7 @@ WHERE ((payitemtypename = 'BonusCashout'
   AND note is not null)
   AND postingtype = 'Bonus')
 SELECT *,
-      ROW_NUMBER () OVER (PARTITION BY bonuswalletid) AS rn   
+      ROW_NUMBER () OVER (PARTITION BY bonuswalletid ORDER BY postingcompleted ASC) AS rn   
 FROM s) 
 SELECT * 
 FROM d 
