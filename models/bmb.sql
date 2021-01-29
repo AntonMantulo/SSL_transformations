@@ -33,4 +33,4 @@ SELECT  betactivity.betid,
 FROM `stitch-test-296708.mysql.BetActivity` AS betactivity
 LEFT JOIN temp
 ON betactivity.bonuswalletid = temp.bonuswalletid
-WHERE wallettype = 'BonusMoney' AND gamecode <> 'OddsMatrix2'
+WHERE wallettype = 'BonusMoney'

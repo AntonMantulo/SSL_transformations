@@ -1,4 +1,4 @@
-SELECT REGEXP_REPLACE(userid,'[^0-9 ]','') AS userid,
+SELECT CAST(REGEXP_REPLACE(userid,'[^0-9 ]','') AS INT64) AS userid,
        CASE
        WHEN transactiontype='Vendor2User' 
         OR transactiontype='Deposit'

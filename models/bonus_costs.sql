@@ -19,7 +19,7 @@ WHERE bonuswalletid IN (SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswall
                         WHERE (payitemtypename = 'BonusCashout' OR note LIKE 'ReturnAmountCausedByCompletion%')
                           AND note is not null
                           AND postingtype = 'Bonus')
-   AND bonuswalletid NOT IN (SELECT bonuswalletid FROM `stitch-test-296708.mysql.BetActivity` WHERE gamecode = 'OddsMatrix2')),
+   ),
                           
 d AS (WITH s AS (SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswalletid2,
                         note AS note2, 
@@ -53,7 +53,7 @@ WHERE bonuswalletid IN (SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswall
                         FROM `stitch-test-296708.mysql.Posting` 
                         WHERE (payitemtypename = 'BonusExpiredBonus' OR payitemtypename = 'BonusForfeitedBonus')  
                           AND note is not null AND postingtype = 'Bonus')
-   AND bonuswalletid NOT IN (SELECT bonuswalletid FROM `stitch-test-296708.mysql.BetActivity` WHERE gamecode = 'OddsMatrix2')), 
+   ), 
       
 x AS (SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswalletid, 
         amount AS amount2,  
