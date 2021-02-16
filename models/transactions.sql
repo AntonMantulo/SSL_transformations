@@ -1,4 +1,4 @@
-WITH t AS(
+WITH master AS (WITH t AS(
       SELECT 
           CAST(REGEXP_REPLACE(userid,'[^0-9 ]','') AS INT64) AS userid,
           CASE
@@ -41,4 +41,6 @@ SELECT *
 FROM t
 UNION ALL
 SELECT *
-FROM p
+FROM p)
+SELECT *, ROW_NUMBER () OVER (PARTITION BY userid, transactiontype ORDER BY transactioncompleted ASC) AS rn 
+FROM master
