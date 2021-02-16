@@ -1,3 +1,19 @@
+WITH master AS (WITH s AS (WITH asd AS(SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswalletid,
+      CASE 
+        WHEN LENGTH(TRIM(RIGHT(note, 13))) = 12
+        THEN CAST(LEFT(TRIM(RIGHT(note, 13)), 7) AS INT64)
+        ELSE CAST(LEFT(TRIM(RIGHT(note, 13)), 8) AS INT64)
+      END AS userid,
+      amount * eurexchangerate * (-1) AS amounteur,
+      amount * (-1) as amount,
+      eurexchangerate,
+      currency
+FROM `stitch-test-296708.mysql.Posting` AS posting
+WHERE payitemtypename = 'BonusGranted'   
+  AND note is not null
+  AND postingtype = 'Bonus')
+SELECT *
+FROM asd 
 WHERE bonuswalletid IN (SELECT CAST(TRIM(RIGHT(note, 13)) AS INT64) AS bonuswalletid
                         FROM `stitch-test-296708.mysql.Posting` 
                         WHERE (payitemtypename = 'BonusCashout' OR note LIKE 'ReturnAmountCausedByCompletion%')
