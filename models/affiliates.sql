@@ -126,7 +126,7 @@ SELECT userid,
    primary_commission,
    secondary_commission
 FROM master
-LEFT JOIN `dbt_amantulo.Affliates cardinality`  AS t
+LEFT JOIN `dbt_amantulo.Affiliates cardinality`  AS t
 ON LEFT(master.affiliatecode, 7) = t.secondary_aff)
 SELECT userid, 
    date,
