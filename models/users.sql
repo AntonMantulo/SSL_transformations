@@ -38,6 +38,7 @@ SELECT user.userid,
     rmb.amounteur + bmb.amounteur AS turnover,
     IFNULL(rmb.amounteur, 0) + IFNULL(bmb.amounteur, 0) - IFNULL(rmw.amounteur, 0) - IFNULL(bmw.amounteur, 0) AS ggr,
     IFNULL(rmb.amounteur, 0) + IFNULL(bmb.amounteur, 0) - IFNULL(rmw.amounteur, 0) - IFNULL(bmw.amounteur, 0) - IFNULL(bonus_costs.amounteur, 0) AS ngr,
+    IFNULL(bonus_costs.amounteur, 0) AS bonus_costs,
     firstdep.transactioncompleted AS first_deposit,
     lastdep.transactioncompleted AS last_deposit
 FROM user
