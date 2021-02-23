@@ -30,7 +30,7 @@ rmw AS (
 
 SELECT user.userid,
     user.username,
-    user.affiliatemarker,
+    LEFT(user.affiliatemarker, 7) AS affiliatemarker,
     user.country,
     user.status,
     user.registrationdate,
