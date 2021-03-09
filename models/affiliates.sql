@@ -2,40 +2,30 @@ WITH master2 AS (WITH master AS(WITH joins AS (
 
 WITH rmb AS (SELECT userid,CAST(endtime AS DATE) AS endtime, SUM(amounteur) as rmb_eur
               FROM mysql.BetActivity
-              WHERE (EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from endtime)= EXTRACT (YEAR from CURRENT_DATE())
+              WHERE DATE(endtime) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               AND wallettype = 'RealCash'
               GROUP BY userid,endtime),
               
 
 bmb as(SELECT userid,SUM(amounteur) as bmb_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ref ('bmb') }}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted), 
               
 rmw as(SELECT userid,SUM(amounteur) as rmw_eur,CAST(endtime AS DATE) AS endtime
               FROM mysql.WinActivity
-              WHERE (EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from endtime)= EXTRACT (YEAR from CURRENT_DATE())
+              WHERE DATE(endtime) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               AND wallettype = 'RealCash'
               GROUP BY userid,endtime),
               
 bmw as(SELECT userid,SUM(amounteur) as bmw_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ ref ('bmw') }}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted),              
               
 bc as (SELECT userid,SUM(amounteur) as bc_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ref ('bonus_costs')}}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted)
                                           
 SELECT rmb.userid, rmb.endtime AS date
@@ -55,43 +45,34 @@ FROM bc),
 
 rmb AS (SELECT userid,CAST(endtime AS DATE) AS endtime, SUM(amounteur) as rmb_eur
               FROM mysql.BetActivity
-              WHERE (EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from endtime)= EXTRACT (YEAR from CURRENT_DATE())
+              WHERE DATE(endtime) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               AND wallettype = 'RealCash'
               GROUP BY userid,endtime),
               
 bmb as(SELECT userid,SUM(amounteur) as bmb_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ ref ('bmb')}}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                  AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted), 
 
 rmw as(SELECT userid,SUM(amounteur) as rmw_eur,CAST(endtime AS DATE) AS endtime
               FROM mysql.WinActivity
-              WHERE (EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) 
-                  OR EXTRACT( MONTH from endtime)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                 AND EXTRACT( YEAR from endtime)= EXTRACT (YEAR from CURRENT_DATE())
+              WHERE DATE(endtime) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               AND wallettype = 'RealCash'
               GROUP BY userid,endtime),
               
 bmw as(SELECT userid,SUM(amounteur) as bmw_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ ref ('bmw')}}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                 AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted),              
               
 bc as (SELECT userid,SUM(amounteur) as bc_eur,CAST(postingcompleted AS DATE) AS postingcompleted
              FROM {{ ref ('bonus_costs')}}
-             WHERE (EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) OR EXTRACT( MONTH from postingcompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                 AND EXTRACT( YEAR from postingcompleted)= EXTRACT (YEAR from CURRENT_DATE())
+             WHERE DATE(postingcompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
               GROUP BY userid,postingcompleted), 
 
 trans AS (SELECT userid, SUM (amounteur) AS deposits, CAST (transactioncompleted AS DATE) AS transactioncompleted
             FROM {{ ref ('transactions')}} WHERE transactiontype = 'Deposit' 
-                  AND (EXTRACT( MONTH from transactioncompleted)= EXTRACT (MONTH from CURRENT_DATE()) OR EXTRACT( MONTH from transactioncompleted)= EXTRACT (MONTH from CURRENT_DATE()) - 1)
-                 AND EXTRACT( YEAR from transactioncompleted)= EXTRACT (YEAR from CURRENT_DATE())
+                  AND DATE(transactioncompleted) BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 3 MONTH) AND CURRENT_DATE()
                  GROUP BY userid, transactioncompleted)
                                                
                                           
